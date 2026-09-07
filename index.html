@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>32 Cards - King Midas Live Casino</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Pixi.js v7 for GPU-accelerated WebGL particles & lightning effects -->
+  <script src="pixi.min.js"></script>
+</head>
+<body>
+
+  <!-- Full Desktop Backdrop -->
+  <div class="desktop-backdrop">
+
+    <!-- Mobile Frame Modal (Exact 9:16 Aspect Ratio) -->
+    <div class="mobile-game-frame">
+      <!-- Pixi Canvas for WebGL Lightning & FX -->
+      <div id="pixiCanvasContainer"></div>
+
+      <!-- Close Modal X Button -->
+      <button class="modal-close-btn" title="Close Game">✕</button>
+
+      <!-- TOP DEALER SECTION (Golden Casino Room, Dealer, Richest & Big Winners) -->
+      <div class="dealer-screen">
+        <!-- Top Status Bar Inside Room -->
+        <div class="dealer-top-bar">
+          <span class="min-bet-tag">Min. Bet: <strong>0.50</strong></span>
+          <span class="round-code-tag" id="roundCodeText">Round ID: TTC-cd-eg22</span>
+          <button class="mute-sound-btn" id="soundBtn" title="Toggle Sound">🔊</button>
+        </div>
+
+        <!-- Left "RICHEST" Leaderboard -->
+        <div class="richest-column">
+          <div class="richest-title">RICHEST</div>
+          <div class="rich-user">
+            <div class="rich-avatar av1"></div>
+            <span class="rich-badge">#1 10K</span>
+          </div>
+          <div class="rich-user">
+            <div class="rich-avatar av2"></div>
+            <span class="rich-badge">#2 10K</span>
+          </div>
+          <div class="rich-user">
+            <div class="rich-avatar av3"></div>
+            <span class="rich-badge">#3 10K</span>
+          </div>
+        </div>
+
+        <!-- Center 3D Dealer Girl with Luxury Gold Casino Room -->
+        <div class="dealer-center-stage">
+          <div class="dealer-girl-svg">
+            <svg viewBox="0 0 170 190" width="160" height="175">
+              <defs>
+                <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#2a1820"/>
+                  <stop offset="100%" stop-color="#0a0508"/>
+                </linearGradient>
+                <radialGradient id="skinGrad" cx="50%" cy="40%" r="50%">
+                  <stop offset="0%" stop-color="#ffdfd0"/>
+                  <stop offset="100%" stop-color="#f5b89a"/>
+                </radialGradient>
+                <linearGradient id="cheongsamGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#18181b"/>
+                  <stop offset="50%" stop-color="#27272a"/>
+                  <stop offset="100%" stop-color="#f59e0b"/>
+                </linearGradient>
+              </defs>
+              <!-- Shoulders & Gold-Trimmed Cheongsam Dress -->
+              <path d="M36 190 C36 120 54 105 85 105 C116 105 134 120 134 190 Z" fill="url(#cheongsamGrad)" stroke="#fbbf24" stroke-width="2"/>
+              <path d="M72 105 C78 122 92 122 98 105" fill="none" stroke="#f59e0b" stroke-width="3"/>
+              <!-- Neck -->
+              <rect x="78" y="80" width="14" height="28" fill="url(#skinGrad)" rx="3"/>
+              <!-- Face -->
+              <ellipse cx="85" cy="56" rx="26" ry="31" fill="url(#skinGrad)"/>
+              <!-- Big Anime Eyes & Makeup -->
+              <ellipse cx="74" cy="53" rx="5" ry="3.5" fill="#18181b"/>
+              <ellipse cx="96" cy="53" rx="5" ry="3.5" fill="#18181b"/>
+              <circle cx="73" cy="51.5" r="1.8" fill="#ffffff"/>
+              <circle cx="95" cy="51.5" r="1.8" fill="#ffffff"/>
+              <!-- Eyebrows -->
+              <path d="M68 45 Q75 41 81 46" fill="none" stroke="#1c1917" stroke-width="2" stroke-linecap="round"/>
+              <path d="M89 46 Q95 41 102 45" fill="none" stroke="#1c1917" stroke-width="2" stroke-linecap="round"/>
+              <!-- Nose & Red Lipstick -->
+              <path d="M84 60 L86 65" stroke="#e09577" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M78 71 Q85 78 92 71 Q85 73.5 78 71 Z" fill="#e11d48"/>
+              <!-- Cute Hairstyle & Double Buns -->
+              <path d="M58 52 C52 30 68 20 85 20 C102 20 118 30 112 52 C105 32 95 28 85 28 C75 28 65 32 58 52 Z" fill="url(#hairGrad)"/>
+              <circle cx="58" cy="30" r="13" fill="url(#hairGrad)"/>
+              <circle cx="112" cy="30" r="13" fill="url(#hairGrad)"/>
+              <!-- Golden Hair Pins -->
+              <path d="M48 20 L66 35" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+              <path d="M122 20 L104 35" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Right "BIG WINNERS" in Glowing Blue -->
+        <div class="big-winners-column">
+          <div class="winners-title">BIG WINNERS</div>
+        </div>
+
+        <!-- Green Felt Table Surface with Mini Card Guidelines & Shoe Machine -->
+        <div class="dealer-table-surface">
+          <div class="table-card-lines">
+            <div class="table-mini-box" id="mini-8" title="Player 8 Deal Box">
+              <span class="box-num">8</span>
+              <span class="box-sub">CARD</span>
+            </div>
+            <div class="table-mini-box" id="mini-9" title="Player 9 Deal Box">
+              <span class="box-num">9</span>
+              <span class="box-sub">CARD</span>
+            </div>
+            <div class="table-mini-box" id="mini-10" title="Player 10 Deal Box">
+              <span class="box-num">10</span>
+              <span class="box-sub">CARD</span>
+            </div>
+            <div class="table-mini-box" id="mini-11" title="Player 11 Deal Box">
+              <span class="box-num">11</span>
+              <span class="box-sub">CARD</span>
+            </div>
+          </div>
+
+          <!-- Dealing Shoe Machine (Where Cards Deal Out!) -->
+          <div class="card-shoe-unit" id="shoeDevice" title="Card Shoe">
+            <div class="shoe-km-badge">KM</div>
+            <div class="shoe-mouth"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3D "New Round" Golden Banner -->
+      <div class="new-round-banner" id="newRoundBanner">
+        <span>New Round</span>
+      </div>
+
+      <!-- Floating Result / Bet Locked Toast Capsule -->
+      <div class="toast-capsule" id="toastCapsule">
+        <span id="toastMsg">PLACE BET NOW</span>
+      </div>
+
+      <!-- MIDDLE BOARD: TEAL CASINO FELT (NO EMPTY GAP - PERFECT FIT!) -->
+      <div class="felt-game-board">
+        <!-- Subheader: 👥 5 | Place bet now 13 | 0.50 Min 8 Max ☰ -->
+        <div class="board-header-strip">
+          <div class="players-online">
+            <span class="user-icon">👥</span>
+            <span class="online-count">5</span>
+          </div>
+
+          <div class="countdown-capsule">
+            <span class="timer-tag" id="timerLabel">Place bet now</span>
+            <span class="timer-num" id="timerCount">13</span>
+          </div>
+
+          <div class="table-limits-menu">
+            <div class="limits-text">
+              <span>0.50 Min</span>
+              <span>8 Max</span>
+            </div>
+            <span class="menu-bars">☰</span>
+          </div>
+        </div>
+
+        <!-- 4 Betting Columns (Zero Blank Space!) -->
+        <div class="betting-columns-grid">
+          <!-- Player 8 -->
+          <div class="player-column-pack" data-player="8">
+            <div class="card-slot-frame" id="slot-8"></div>
+            <div class="bet-button-box" id="box-8" onclick="handlePlaceBet(8)">
+              <div class="lightning-flag" id="mult-8">⚡ 11x</div>
+              <div class="plus-sign">+</div>
+              <div class="main-digit">8</div>
+              <div class="odds-val">1:11</div>
+              <div class="chip-circle-socket" id="chips-8"></div>
+            </div>
+            <div class="points-pill" id="pts-8">--</div>
+          </div>
+
+          <!-- Player 9 -->
+          <div class="player-column-pack" data-player="9">
+            <div class="card-slot-frame" id="slot-9"></div>
+            <div class="bet-button-box" id="box-9" onclick="handlePlaceBet(9)">
+              <div class="lightning-flag" id="mult-9">⚡ 5.7x</div>
+              <div class="plus-sign">+</div>
+              <div class="main-digit">9</div>
+              <div class="odds-val">1:4.5</div>
+              <div class="chip-circle-socket" id="chips-9"></div>
+            </div>
+            <div class="points-pill" id="pts-9">--</div>
+          </div>
+
+          <!-- Player 10 -->
+          <div class="player-column-pack" data-player="10">
+            <div class="card-slot-frame" id="slot-10"></div>
+            <div class="bet-button-box" id="box-10" onclick="handlePlaceBet(10)">
+              <div class="lightning-flag" id="mult-10">⚡ 2.2x</div>
+              <div class="plus-sign">+</div>
+              <div class="main-digit">10</div>
+              <div class="odds-val">1:2.2</div>
+              <div class="chip-circle-socket" id="chips-10"></div>
+            </div>
+            <div class="points-pill" id="pts-10">--</div>
+          </div>
+
+          <!-- Player 11 -->
+          <div class="player-column-pack" data-player="11">
+            <div class="card-slot-frame" id="slot-11"></div>
+            <div class="bet-button-box" id="box-11" onclick="handlePlaceBet(11)">
+              <div class="lightning-flag" id="mult-11">⚡ 1.3x</div>
+              <div class="plus-sign">+</div>
+              <div class="main-digit">11</div>
+              <div class="odds-val">1:1</div>
+              <div class="chip-circle-socket" id="chips-11"></div>
+            </div>
+            <div class="points-pill" id="pts-11">--</div>
+          </div>
+        </div>
+
+        <!-- USER ACTION STRIP (Exact Match: fpbi24yf9n + Coins + ↶ ✕ x2 + Pop-up Chips) -->
+        <div class="user-action-strip">
+          <div class="player-profile">
+            <div class="player-avatar-img">
+              <svg viewBox="0 0 32 32" width="22" height="22">
+                <circle cx="16" cy="12" r="7" fill="#fbbf24"/>
+                <path d="M6 28 C6 21 11 19 16 19 C21 19 26 21 26 28 Z" fill="#94a3b8"/>
+              </svg>
+            </div>
+            <div class="player-meta">
+              <span class="player-name">fpbi24yf9n</span>
+              <span class="player-cash">🪙 <strong id="balanceText">9,981</strong></span>
+            </div>
+          </div>
+
+          <!-- Active Stake Display -->
+          <div class="active-stake-indicator">
+            <span class="coin-symbol">🪙</span>
+            <span class="stake-val" id="stakeText">0</span>
+          </div>
+
+          <!-- Controls: ↶ Undo | ✕ Clear | x2 Double -->
+          <div class="bet-action-buttons">
+            <button class="action-circle-btn" onclick="handleUndo()" title="Undo Bet">↶</button>
+            <button class="action-circle-btn" onclick="handleClear()" title="Clear Bets">✕</button>
+            <button class="action-circle-btn" onclick="handleDouble()" title="Double Bets">x2</button>
+          </div>
+
+          <!-- VERTICAL CHIP POPUP STACK -->
+          <div class="chip-stack-wrapper">
+            <!-- Vertical Flyout Menu of Chips -->
+            <div class="vertical-chips-menu" id="chipsMenu">
+              <div class="pop-chip chip-val-10" onclick="selectChipFromMenu(10)">10</div>
+              <div class="pop-chip chip-val-5" onclick="selectChipFromMenu(5)">5</div>
+              <div class="pop-chip chip-val-3" onclick="selectChipFromMenu(3)">3</div>
+              <div class="pop-chip chip-val-2" onclick="selectChipFromMenu(2)">2</div>
+              <div class="pop-chip chip-val-05" onclick="selectChipFromMenu(0.5)">0.5</div>
+            </div>
+
+            <!-- Main Active Chip (Clicking this toggles the vertical stack!) -->
+            <div class="active-casino-chip" id="mainActiveChip" onclick="toggleChipsMenu()" title="Select Chip Value">
+              <span id="activeChipNum">1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM STATS & 100-ROUNDS PROBABILITIES (Exact Match to Image 1) -->
+        <div class="scorecard-panel">
+          <!-- 11x5 History Grid -->
+          <div class="history-grid-matrix" id="statsGrid"></div>
+
+          <!-- 100 Rounds Percentages -->
+          <div class="probabilities-panel">
+            <div class="prob-title">Calculated from last 100 rounds</div>
+            <div class="prob-row">
+              <span class="p-name">Player 8</span>
+              <div class="p-track"><div class="p-fill f-8" id="bar-8" style="width: 16%;"></div></div>
+              <span class="p-val" id="pct-8">16%</span>
+            </div>
+            <div class="prob-row">
+              <span class="p-name">Player 9</span>
+              <div class="p-track"><div class="p-fill f-9" id="bar-9" style="width: 20%;"></div></div>
+              <span class="p-val" id="pct-9">20%</span>
+            </div>
+            <div class="prob-row">
+              <span class="p-name">Player 10</span>
+              <div class="p-track"><div class="p-fill f-10" id="bar-10" style="width: 25%;"></div></div>
+              <span class="p-val" id="pct-10">25%</span>
+            </div>
+            <div class="prob-row">
+              <span class="p-name">Player 11</span>
+              <div class="p-track"><div class="p-fill f-11" id="bar-11" style="width: 38%;"></div></div>
+              <span class="p-val" id="pct-11">38%</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
