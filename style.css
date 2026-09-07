@@ -87,7 +87,7 @@ html, body {
 
 /* TOP DEALER SECTION (EXACT LIVE 3D VIDEO DEALER FROM KING MIDAS!) */
 .dealer-screen {
-  height: 250px;
+  height: 265px;
   background: #000000;
   position: relative;
   overflow: hidden;
@@ -105,7 +105,7 @@ html, body {
 .dealer-video-crop video {
   width: 100%;
   position: absolute;
-  top: -95px;
+  top: -75px;
   left: 0;
   pointer-events: none;
 }
@@ -518,7 +518,8 @@ html, body {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.95);
   z-index: 100;
   pointer-events: none;
-  transition: all 0.45s cubic-bezier(0.2, 0.8, 0.3, 1);
+  transition: all 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.9), 0 0 15px rgba(251,191,36,0.6);
 }
 
 /* USER ACTION STRIP: Avatar + Cash + ↶ ✕ x2 + VERTICAL CHIPS FLYOUT */

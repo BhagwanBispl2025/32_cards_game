@@ -559,10 +559,84 @@ function dealCard(player, cardData, delay = 0) {
 // ==========================================
 // 8. MAIN ROUND FLOW LOOP
 // ==========================================
+function dealCardFromDealer(player, cardData, startPos, delay = 0) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const slotEl = document.getElementById(`slot-${player}`);
+      const slotRect = slotEl.getBoundingClientRect();
+
+      const flyNode = document.createElement("div");
+      flyNode.className = "flying-card-node";
+      flyNode.style.left = `${startPos.x}px`;
+      flyNode.style.top = `${startPos.y}px`;
+      flyNode.style.transform = "rotate(-10deg) scale(0.35)";
+      document.body.appendChild(flyNode);
+
+      sound.playSlide();
+
+      requestAnimationFrame(() => {
+        flyNode.style.left = `${slotRect.left}px`;
+        flyNode.style.top = `${slotRect.top}px`;
+        flyNode.style.width = `${slotRect.width}px`;
+        flyNode.style.height = `${slotRect.height}px`;
+        flyNode.style.transform = "rotate(0deg) scale(1)";
+      });
+
+      setTimeout(() => {
+        flyNode.remove();
+
+        const card = document.createElement("div");
+        card.className = "playing-card";
+
+        const suit = cardData.suit;
+        const isRed = suit.color === "red";
+
+        card.innerHTML = `
+          <div class="card-side card-back"></div>
+          <div class="card-side card-front ${isRed ? "red-suit" : ""}">
+            <div class="index-corner-top">
+              <span class="index-val">${cardData.rank}</span>
+              <div class="mini-suit-icon">${suit.svg}</div>
+            </div>
+            <div class="center-suit-art">
+              ${suit.svg}
+            </div>
+            <div class="index-corner-bottom">
+              <span class="index-val">${cardData.rank}</span>
+              <div class="mini-suit-icon">${suit.svg}</div>
+            </div>
+          </div>
+        `;
+
+        slotEl.innerHTML = "";
+        slotEl.appendChild(card);
+
+        // 3D Flip
+        setTimeout(() => {
+          card.classList.add("flipped");
+          sound.playFlip();
+
+          const totalPoints = player + cardData.value;
+          const ptsEl = document.getElementById(`pts-${player}`);
+          ptsEl.textContent = totalPoints;
+          ptsEl.classList.add("show");
+
+          resolve({ player, totalPoints });
+        }, 260);
+
+      }, 480);
+
+    }, delay);
+  });
+}
+
 async function runRound() {
   roundId++;
   const roundCodeEl = document.getElementById("roundCodeText");
   if (roundCodeEl) roundCodeEl.textContent = `Round ID: TTC-${Math.random().toString(36).substring(2, 8)}`;
+
+  // Get Dealer Video Element
+  const dealerVid = document.getElementById("dealerVideo");
 
   PLAYERS.forEach(p => {
     document.getElementById(`slot-${p}`).innerHTML = "";
@@ -572,11 +646,6 @@ async function runRound() {
     document.getElementById(`box-${p}`).classList.remove("winner");
     document.getElementById(`chips-${p}`).innerHTML = "";
     document.getElementById(`mult-${p}`).classList.remove("active");
-    const mini = document.getElementById(`mini-${p}`);
-    if (mini) {
-      mini.classList.remove("dealing-active");
-      mini.querySelector(".box-sub").textContent = "CARD";
-    }
   });
 
   bets = { 8: 0, 9: 0, 10: 0, 11: 0 };
@@ -585,9 +654,14 @@ async function runRound() {
   totalStake = 0;
   stakeText.textContent = "0";
 
-  // Step 1: New Round 3D Toast
+  // Step 1: New Round 3D Banner & Sync Video to Start of Round
   newRoundBanner.classList.add("show");
   setTimeout(() => newRoundBanner.classList.remove("show"), 1500);
+
+  if (dealerVid) {
+    dealerVid.currentTime = 26; // Video timestamp where "Place your bets" starts
+    dealerVid.play().catch(() => {});
+  }
 
   // Step 2: Open Betting
   isBettingOpen = true;
@@ -615,7 +689,7 @@ async function runRound() {
       boxRect.left + boxRect.width / 2 - arenaRect.left,
       boxRect.top + 20 - arenaRect.top
     );
-  }, 2000);
+  }, 2200);
 
   // Countdown timer
   await new Promise(resolve => {
@@ -640,18 +714,35 @@ async function runRound() {
   timerLabel.textContent = "Dealing Cards...";
   timerCount.textContent = "--";
   chipsMenu.classList.remove("open");
-  showToast("BET LOCKED!", "red", 1800);
-  await new Promise(r => setTimeout(r, 1800));
+  showToast("BET LOCKED!", "red", 1500);
 
-  // Step 5: Deal 4 Cards
+  // Sync video to exactly when girl takes cards from shoe (00:02 of video!)
+  if (dealerVid) {
+    dealerVid.currentTime = 2.2;
+    dealerVid.play().catch(() => {});
+  }
+  await new Promise(r => setTimeout(r, 1400));
+
+  // Step 5: Deal 4 Cards Physically Out of Dealer Arms & Table Shoe
   const suitsList = [SUITS.spades, SUITS.hearts, SUITS.clubs, SUITS.diamonds];
   const roundResults = [];
+
+  // Card Dealing Coordinates (Directly from dealer girl hands & shoe on video!)
+  const arenaRect = canvasContainer.getBoundingClientRect();
+  const dealerArmPositions = [
+    { x: arenaRect.left + arenaRect.width * 0.40, y: arenaRect.top + 215 }, // Hand to Player 8
+    { x: arenaRect.left + arenaRect.width * 0.50, y: arenaRect.top + 215 }, // Hand to Player 9
+    { x: arenaRect.left + arenaRect.width * 0.60, y: arenaRect.top + 215 }, // Hand to Player 10
+    { x: arenaRect.left + arenaRect.width * 0.70, y: arenaRect.top + 215 }  // Hand to Player 11
+  ];
 
   for (let i = 0; i < PLAYERS.length; i++) {
     const player = PLAYERS[i];
     const cardData = DECK[Math.floor(Math.random() * DECK.length)];
     const cardSuit = suitsList[Math.floor(Math.random() * suitsList.length)];
-    const res = await dealCard(player, { rank: cardData.rank, value: cardData.value, suit: cardSuit }, 260);
+    const startCoord = dealerArmPositions[i];
+
+    const res = await dealCardFromDealer(player, { rank: cardData.rank, value: cardData.value, suit: cardSuit }, startCoord, 320);
     roundResults.push(res);
   }
 
@@ -696,7 +787,6 @@ async function runRound() {
 
   // Trigger Pixi.js Confetti Particles
   const winBoxRect = winningBox.getBoundingClientRect();
-  const arenaRect = canvasContainer.getBoundingClientRect();
   triggerPixiWinSparks(
     winBoxRect.left + winBoxRect.width / 2 - arenaRect.left,
     winBoxRect.top + winBoxRect.height / 2 - arenaRect.top
@@ -705,7 +795,7 @@ async function runRound() {
   historyRecords.push(winningPlayer);
   renderStats();
 
-  setTimeout(runRound, 4600);
+  setTimeout(runRound, 4800);
 }
 
 window.addEventListener("DOMContentLoaded", () => {
