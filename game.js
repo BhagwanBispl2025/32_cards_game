@@ -635,7 +635,6 @@ async function runRound() {
   const roundCodeEl = document.getElementById("roundCodeText");
   if (roundCodeEl) roundCodeEl.textContent = `Round ID: TTC-${Math.random().toString(36).substring(2, 8)}`;
 
-  // Get Dealer Video Element
   const dealerVid = document.getElementById("dealerVideo");
 
   PLAYERS.forEach(p => {
@@ -654,12 +653,13 @@ async function runRound() {
   totalStake = 0;
   stakeText.textContent = "0";
 
-  // Step 1: New Round 3D Banner & Sync Video to Start of Round
+  // Step 1: New Round 3D Banner & Dealer Welcome
   newRoundBanner.classList.add("show");
   setTimeout(() => newRoundBanner.classList.remove("show"), 1500);
 
+  // Sync Video: Dealer announces "Place your bets" (Time 26s in video)
   if (dealerVid) {
-    dealerVid.currentTime = 26; // Video timestamp where "Place your bets" starts
+    dealerVid.currentTime = 26.2;
     dealerVid.play().catch(() => {});
   }
 
@@ -709,41 +709,43 @@ async function runRound() {
     }, 1000);
   });
 
-  // Step 4: Lock Bets
+  // Step 4: Lock Bets & Sync Dealer to "No more bets" and Dealing Shoes
   isBettingOpen = false;
   timerLabel.textContent = "Dealing Cards...";
   timerCount.textContent = "--";
   chipsMenu.classList.remove("open");
-  showToast("BET LOCKED!", "red", 1500);
+  showToast("BET LOCKED!", "red", 1200);
 
-  // Sync video to exactly when girl takes cards from shoe (00:02 of video!)
+  // Video Jump to 00:01.8 - Dealer takes cards from shoe and distributes with her hands!
   if (dealerVid) {
-    dealerVid.currentTime = 2.2;
+    dealerVid.currentTime = 1.9;
     dealerVid.play().catch(() => {});
   }
-  await new Promise(r => setTimeout(r, 1400));
+  await new Promise(r => setTimeout(r, 1100));
 
-  // Step 5: Deal 4 Cards Physically Out of Dealer Arms & Table Shoe
+  // Step 5: Deal 4 Cards Sequentially as Dealer Hands Move
   const suitsList = [SUITS.spades, SUITS.hearts, SUITS.clubs, SUITS.diamonds];
   const roundResults = [];
 
-  // Card Dealing Coordinates (Directly from dealer girl hands & shoe on video!)
   const arenaRect = canvasContainer.getBoundingClientRect();
-  const dealerArmPositions = [
-    { x: arenaRect.left + arenaRect.width * 0.40, y: arenaRect.top + 215 }, // Hand to Player 8
-    { x: arenaRect.left + arenaRect.width * 0.50, y: arenaRect.top + 215 }, // Hand to Player 9
-    { x: arenaRect.left + arenaRect.width * 0.60, y: arenaRect.top + 215 }, // Hand to Player 10
-    { x: arenaRect.left + arenaRect.width * 0.70, y: arenaRect.top + 215 }  // Hand to Player 11
+  // Physical start coordinates exactly from dealer girl hands & shoe on the table!
+  const dealerHands = [
+    { x: arenaRect.left + arenaRect.width * 0.42, y: arenaRect.top + 215 }, // Hand to Card 8
+    { x: arenaRect.left + arenaRect.width * 0.48, y: arenaRect.top + 215 }, // Hand to Card 9
+    { x: arenaRect.left + arenaRect.width * 0.54, y: arenaRect.top + 215 }, // Hand to Card 10
+    { x: arenaRect.left + arenaRect.width * 0.60, y: arenaRect.top + 215 }  // Hand to Card 11
   ];
 
+  // Distribute one by one exactly as dealer gestures
   for (let i = 0; i < PLAYERS.length; i++) {
     const player = PLAYERS[i];
     const cardData = DECK[Math.floor(Math.random() * DECK.length)];
     const cardSuit = suitsList[Math.floor(Math.random() * suitsList.length)];
-    const startCoord = dealerArmPositions[i];
+    const startCoord = dealerHands[i];
 
-    const res = await dealCardFromDealer(player, { rank: cardData.rank, value: cardData.value, suit: cardSuit }, startCoord, 320);
+    const res = await dealCardFromDealer(player, { rank: cardData.rank, value: cardData.value, suit: cardSuit }, startCoord, 0);
     roundResults.push(res);
+    await new Promise(r => setTimeout(r, 450)); // Realistic dealing pause per card
   }
 
   // Step 6: Evaluate Winner
@@ -797,7 +799,3 @@ async function runRound() {
 
   setTimeout(runRound, 4800);
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  setTimeout(runRound, 800);
-});
