@@ -23,110 +23,17 @@
 
       <!-- TOP DEALER SECTION (Golden Casino Room, Dealer, Richest & Big Winners) -->
       <div class="dealer-screen">
-        <!-- Top Status Bar Inside Room -->
-        <div class="dealer-top-bar">
-          <span class="min-bet-tag">Min. Bet: <strong>0.50</strong></span>
-          <span class="round-code-tag" id="roundCodeText">Round ID: TTC-cd-eg22</span>
-          <button class="mute-sound-btn" id="soundBtn" title="Toggle Sound">🔊</button>
+        <div class="dealer-video-crop">
+          <video id="dealerVideo" src="dealer.mp4" autoplay loop muted playsinline></video>
+        </div>
+        
+        <!-- Live Badge -->
+        <div class="dealer-live-tag">
+          <span class="live-dot"></span> LIVE
         </div>
 
-        <!-- Left "RICHEST" Leaderboard -->
-        <div class="richest-column">
-          <div class="richest-title">RICHEST</div>
-          <div class="rich-user">
-            <div class="rich-avatar av1"></div>
-            <span class="rich-badge">#1 10K</span>
-          </div>
-          <div class="rich-user">
-            <div class="rich-avatar av2"></div>
-            <span class="rich-badge">#2 10K</span>
-          </div>
-          <div class="rich-user">
-            <div class="rich-avatar av3"></div>
-            <span class="rich-badge">#3 10K</span>
-          </div>
-        </div>
-
-        <!-- Center 3D Dealer Girl with Luxury Gold Casino Room -->
-        <div class="dealer-center-stage">
-          <div class="dealer-girl-svg">
-            <svg viewBox="0 0 170 190" width="160" height="175">
-              <defs>
-                <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#2a1820"/>
-                  <stop offset="100%" stop-color="#0a0508"/>
-                </linearGradient>
-                <radialGradient id="skinGrad" cx="50%" cy="40%" r="50%">
-                  <stop offset="0%" stop-color="#ffdfd0"/>
-                  <stop offset="100%" stop-color="#f5b89a"/>
-                </radialGradient>
-                <linearGradient id="cheongsamGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#18181b"/>
-                  <stop offset="50%" stop-color="#27272a"/>
-                  <stop offset="100%" stop-color="#f59e0b"/>
-                </linearGradient>
-              </defs>
-              <!-- Shoulders & Gold-Trimmed Cheongsam Dress -->
-              <path d="M36 190 C36 120 54 105 85 105 C116 105 134 120 134 190 Z" fill="url(#cheongsamGrad)" stroke="#fbbf24" stroke-width="2"/>
-              <path d="M72 105 C78 122 92 122 98 105" fill="none" stroke="#f59e0b" stroke-width="3"/>
-              <!-- Neck -->
-              <rect x="78" y="80" width="14" height="28" fill="url(#skinGrad)" rx="3"/>
-              <!-- Face -->
-              <ellipse cx="85" cy="56" rx="26" ry="31" fill="url(#skinGrad)"/>
-              <!-- Big Anime Eyes & Makeup -->
-              <ellipse cx="74" cy="53" rx="5" ry="3.5" fill="#18181b"/>
-              <ellipse cx="96" cy="53" rx="5" ry="3.5" fill="#18181b"/>
-              <circle cx="73" cy="51.5" r="1.8" fill="#ffffff"/>
-              <circle cx="95" cy="51.5" r="1.8" fill="#ffffff"/>
-              <!-- Eyebrows -->
-              <path d="M68 45 Q75 41 81 46" fill="none" stroke="#1c1917" stroke-width="2" stroke-linecap="round"/>
-              <path d="M89 46 Q95 41 102 45" fill="none" stroke="#1c1917" stroke-width="2" stroke-linecap="round"/>
-              <!-- Nose & Red Lipstick -->
-              <path d="M84 60 L86 65" stroke="#e09577" stroke-width="1.8" stroke-linecap="round"/>
-              <path d="M78 71 Q85 78 92 71 Q85 73.5 78 71 Z" fill="#e11d48"/>
-              <!-- Cute Hairstyle & Double Buns -->
-              <path d="M58 52 C52 30 68 20 85 20 C102 20 118 30 112 52 C105 32 95 28 85 28 C75 28 65 32 58 52 Z" fill="url(#hairGrad)"/>
-              <circle cx="58" cy="30" r="13" fill="url(#hairGrad)"/>
-              <circle cx="112" cy="30" r="13" fill="url(#hairGrad)"/>
-              <!-- Golden Hair Pins -->
-              <path d="M48 20 L66 35" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-              <path d="M122 20 L104 35" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Right "BIG WINNERS" in Glowing Blue -->
-        <div class="big-winners-column">
-          <div class="winners-title">BIG WINNERS</div>
-        </div>
-
-        <!-- Green Felt Table Surface with Mini Card Guidelines & Shoe Machine -->
-        <div class="dealer-table-surface">
-          <div class="table-card-lines">
-            <div class="table-mini-box" id="mini-8" title="Player 8 Deal Box">
-              <span class="box-num">8</span>
-              <span class="box-sub">CARD</span>
-            </div>
-            <div class="table-mini-box" id="mini-9" title="Player 9 Deal Box">
-              <span class="box-num">9</span>
-              <span class="box-sub">CARD</span>
-            </div>
-            <div class="table-mini-box" id="mini-10" title="Player 10 Deal Box">
-              <span class="box-num">10</span>
-              <span class="box-sub">CARD</span>
-            </div>
-            <div class="table-mini-box" id="mini-11" title="Player 11 Deal Box">
-              <span class="box-num">11</span>
-              <span class="box-sub">CARD</span>
-            </div>
-          </div>
-
-          <!-- Dealing Shoe Machine (Where Cards Deal Out!) -->
-          <div class="card-shoe-unit" id="shoeDevice" title="Card Shoe">
-            <div class="shoe-km-badge">KM</div>
-            <div class="shoe-mouth"></div>
-          </div>
-        </div>
+        <!-- Sound Toggle -->
+        <button class="dealer-sound-toggle" id="soundBtn" title="Toggle Sound">🔊</button>
       </div>
 
       <!-- 3D "New Round" Golden Banner -->

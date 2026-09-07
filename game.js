@@ -477,8 +477,8 @@ function dealCard(player, cardData, delay = 0) {
 
       // Start position from Shoe Machine in table surface
       const shoeEl = document.getElementById("shoeDevice");
-      let startX = arenaRect.left + arenaRect.width * 0.78;
-      let startY = arenaRect.top + 185;
+      let startX = arenaRect.left + arenaRect.width * 0.76;
+      let startY = arenaRect.top + 210;
 
       if (shoeEl) {
         const shoeRect = shoeEl.getBoundingClientRect();
