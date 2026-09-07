@@ -285,6 +285,7 @@ let betHistory = []; // Stack for undo functionality
 let isBettingOpen = false;
 let roundId = 83921;
 let activeMultiplier = { player: 11, value: "1.3x" };
+let lastMenuInteractionTime = 0;
 
 // DOM Elements
 const balanceText = document.getElementById("balanceText");
@@ -300,15 +301,50 @@ const activeChipNum = document.getElementById("activeChipNum");
 const mainActiveChip = document.getElementById("mainActiveChip");
 
 // Toggle the Vertical Chips Stack on clicking the active chip
-function toggleChipsMenu() {
+function toggleChipsMenu(e) {
+  if (e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  lastMenuInteractionTime = Date.now();
   chipsMenu.classList.toggle("open");
   sound.playChip();
 }
 
+const ALL_CHIP_VALUES = [10, 5, 3, 2, 1, 0.5];
+
+// Dynamically render the capsule dock with all chips except the selected one
+function renderChipsMenu() {
+  if (!chipsMenu) return;
+  const remainingChips = ALL_CHIP_VALUES.filter(v => v !== selectedChip);
+
+  chipsMenu.innerHTML = remainingChips.map(val => `
+    <div class="pop-chip chip-val-${val === 0.5 ? '05' : val}" data-val="${val}">
+      ${val}
+    </div>
+  `).join('');
+
+  chipsMenu.querySelectorAll('.pop-chip').forEach(chipEl => {
+    const onSelect = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      lastMenuInteractionTime = Date.now();
+      const val = parseFloat(chipEl.getAttribute('data-val'));
+      if (!isNaN(val)) {
+        selectChipFromMenu(val);
+      }
+    };
+    chipEl.addEventListener('click', onSelect);
+    chipEl.addEventListener('touchend', onSelect);
+    chipEl.addEventListener('pointerup', onSelect);
+  });
+}
+
 // Select chip from vertical menu
 function selectChipFromMenu(val) {
+  lastMenuInteractionTime = Date.now();
   selectedChip = val;
-  activeChipNum.textContent = val;
+  activeChipNum.textContent = val === 0.5 ? "0.5" : val;
 
   // Update styling of main active chip based on value
   if (val === 10) mainActiveChip.style.background = "radial-gradient(circle, #2563eb, #1e3a8a)";
@@ -320,12 +356,30 @@ function selectChipFromMenu(val) {
 
   chipsMenu.classList.remove("open");
   sound.playChip();
+  renderChipsMenu();
 }
+
+// Prevent click inside chipsMenu from falling through to betting boxes below
+chipsMenu.addEventListener("click", (e) => {
+  e.stopPropagation();
+  lastMenuInteractionTime = Date.now();
+});
+chipsMenu.addEventListener("pointerdown", (e) => {
+  e.stopPropagation();
+  lastMenuInteractionTime = Date.now();
+});
+chipsMenu.addEventListener("touchstart", (e) => {
+  e.stopPropagation();
+  lastMenuInteractionTime = Date.now();
+});
 
 // Close chips menu if user clicks outside
 document.addEventListener("click", (e) => {
   if (!e.target.closest(".chip-stack-wrapper")) {
-    chipsMenu.classList.remove("open");
+    if (chipsMenu.classList.contains("open")) {
+      lastMenuInteractionTime = Date.now();
+      chipsMenu.classList.remove("open");
+    }
   }
 });
 
@@ -359,11 +413,15 @@ function renderStats() {
   });
 }
 renderStats();
+renderChipsMenu();
 
 // ==========================================
 // 5. BETTING & ACTION BUTTONS (↶ Undo, ✕ Clear, x2 Double)
 // ==========================================
 function handlePlaceBet(player) {
+  if (Date.now() - lastMenuInteractionTime < 450) {
+    return; // Block ghost clicks from chip selection or menu toggle!
+  }
   if (!isBettingOpen) {
     showToast("WAIT FOR NEXT ROUND", "red", 1200);
     return;

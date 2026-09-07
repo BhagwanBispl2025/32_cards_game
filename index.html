@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=4">
   <!-- Pixi.js v7 for GPU-accelerated WebGL particles & lightning effects -->
   <script src="pixi.min.js"></script>
 </head>
@@ -167,7 +167,7 @@
             </div>
 
             <!-- Main Active Chip (Clicking this toggles the vertical stack!) -->
-            <div class="active-casino-chip" id="mainActiveChip" onclick="toggleChipsMenu()" title="Select Chip Value">
+            <div class="active-casino-chip" id="mainActiveChip" onclick="toggleChipsMenu(event)" title="Select Chip Value">
               <span id="activeChipNum">1</span>
             </div>
           </div>
@@ -210,6 +210,6 @@
 
   </div>
 
-  <script src="game.js"></script>
+  <script src="game.js?v=4"></script>
 </body>
 </html>
